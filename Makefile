@@ -7,7 +7,8 @@ MYLIB = $(MYLIB_DIR)/myLib.a
 NAME = pipex
 
 SRCS =	src/main.c \
-		handle_errors.c \
+		src/pipex.c \
+		src/get_commands.c \
 
 OBJS = $(SRCS:.c=.o)
 
