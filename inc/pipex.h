@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 08:49:07 by hbousset          #+#    #+#             */
-/*   Updated: 2025/01/28 11:03:31 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/01/30 14:43:16 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "../mylib/myLib.h"
 # include <sys/wait.h>
+# include <stdio.h>
+#include <errno.h>
 
 void	pipex(char **av, char **env);
 char	*get_command_path(char *cmd, char **env);
