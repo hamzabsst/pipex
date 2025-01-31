@@ -6,7 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/01/30 14:40:11 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:46:14 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
+
+# include"../inc/pipex.h"
+
+#endif
