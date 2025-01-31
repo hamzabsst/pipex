@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:27:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/01/31 11:43:16 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/01/31 15:12:40 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ static void	execute_command(char *cmd, char **env)
 	cmd_args = ft_split(cmd, ' ');
 	if (!cmd_args || !cmd_args[0])
 	{
-		perror("pipex command");
+		perror("pipex command not found");
 		ft_free(cmd_args);
 		exit(127);
 	}
 	cmd_path = get_command_path(cmd_args[0], env);
 	if (!cmd_path)
 	{
-		perror("pipex command");
+		perror("pipex command not found");
 		ft_free(cmd_args);
 		exit(127);
 	}
