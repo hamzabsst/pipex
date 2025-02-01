@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 11:22:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/01 12:08:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,15 @@ int	**alloc_pipes(int cmd_count)
 	return (pipes);
 }
 
-static void	init_first_child(char **av, int **pipes)
+static void	init_first_child(char **av, int **pipes, int cmd_count)
 {
 	int	in;
 
 	in = open(av[1], O_RDONLY);
 	if (in < 0)
-		(perror("pipex infile"), exit(EXIT_FAILURE));
+		(perror("pipex infile"), free_pipes(cmd_count, pipes), exit(EXIT_FAILURE));
 	if (dup2(in, STDIN_FILENO) == -1 || dup2(pipes[0][1], STDOUT_FILENO) == -1)
-		(perror("pipex dup2"), exit(EXIT_FAILURE));
+		(perror("pipex dup2"), free_pipes(cmd_count, pipes), exit(EXIT_FAILURE));
 	close(in);
 }
 
@@ -119,7 +119,7 @@ void	handle_pipes(int ac, char **av, char **env)
 		if (pids[i] == 0)
 		{
 			if (i == 0)
-				init_first_child(av, pipes);
+				init_first_child(av, pipes, cmd_count);
 			else if ( i == cmd_count - 1)
 				last_child(av, ac, cmd_count, pipes);
 			else
