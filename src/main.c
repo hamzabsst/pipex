@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/25 09:32:30 by hbousset          #+#    #+#             */
-/*   Updated: 2025/01/31 15:12:46 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/01 09:35:58 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,7 @@
 int	main(int ac, char **av, char **env)
 {
 	if (ac != 5)
-	{
-		write(2, "Error: Invalid number of arguments\n", 35);
-		exit(127);
-	}
+		(ft_putstr_fd("Error: Invalid number of arguments\n", 2), exit(127));
 	pipex(av, env);
 	return (EXIT_SUCCESS);
 }
