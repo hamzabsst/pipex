@@ -1,35 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_bonus.c                                      :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 14:40:08 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 18:04:54 by hbousset         ###   ########.fr       */
+/*   Created: 2025/02/01 18:45:33 by hbousset          #+#    #+#             */
+/*   Updated: 2025/02/01 19:41:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"pipex_bonus.h"
 
-static int	check_syntax(int ac, char **av)
+void	free_pipes(t_pipex *px)
 {
-	if (!ft_strcmp("here_doc", av[1]))
-	{
-		if (ac != 6)
-			(ft_putstr_fd("invalid structure\n", 2), exit(127));
-		return (1);
-	}
-	return (0);
+	int	i;
+
+	if (!px->pipes)
+		return ;
+	i = 0;
+	while (i < px->cmd_count - 1)
+		free(px->pipes[i++]);
+	free(px->pipes);
+	px->pipes = NULL;
 }
 
-int	main(int ac, char **av, char **env)
+void	close_pipes(t_pipex *px)
 {
-	if (ac < 5)
+	int	i;
+
+	i = 0;
+	while (i < px->cmd_count - 1)
 	{
-		ft_putstr_fd("Error: Invalid number of arguments\n", 2);
-		exit(127);
+		close(px->pipes[i][0]);
+		close(px->pipes[i][1]);
+		i++;
 	}
-	if (check_syntax(ac, av) == 0)
-		handle_pipes(ac, av, env);
+}
+
+void	cleanup(t_pipex *px)
+{
+	if (px->pipes)
+		free_pipes(px);
+	if (px->pids)
+	{
+		free(px->pids);
+		px->pids = NULL;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 12:05:42 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/01 19:41:40 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,18 +79,24 @@ static char	*get_command_path(char *cmd, char **env)
 	return (find_command_in_paths(cmd, paths));
 }
 
-void	execute_command_bonus(char *cmd, char **env)
+void	execute_command_bonus(char *cmd, char **env, t_pipex *px)
 {
 	char	**cmd_args;
 	char	*cmd_path;
 
 	cmd_args = ft_split(cmd, ' ');
 	if (!cmd_args || !cmd_args[0])
-		(perror("pipex command not found"), ft_free(cmd_args), exit(127));
+	{
+		(perror("pipex command not found"), cleanup(px));
+		(ft_free(cmd_args), exit(127));
+	}
 	cmd_path = get_command_path(cmd_args[0], env);
 	if (!cmd_path)
-		(perror("pipex command not found"), ft_free(cmd_args), exit(127));
+	{
+		(perror("pipex command not found"), cleanup(px));
+		(ft_free(cmd_args), exit(127));
+	}
 	execve(cmd_path, cmd_args, env);
-	perror("pipex execve");
+	(perror("pipex execve"), cleanup(px));
 	(free(cmd_path), ft_free(cmd_args), exit(EXIT_FAILURE));
 }
