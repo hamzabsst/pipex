@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 10:18:24 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:15:42 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,9 @@ void	here_doc(char **av, char **env);
 void	heredoc_first_child(t_pipex px, char *tmp);
 void	heredoc_second_child(t_pipex px);
 char	*get_next(int fd);
+char	*get_command_path(char *cmd, char **env);
+void	free_pipes(t_pipex *px);
+void	execute_command_bonus_here_doc(char *cmd, char **env, t_pipex *px);
+void	*ft_free(char **str);
 
 #endif

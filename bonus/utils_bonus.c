@@ -6,11 +6,24 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 10:17:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:03:55 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"pipex_bonus.h"
+
+void	free_pipes(t_pipex *px)
+{
+	int	i;
+
+	if (!px->pipes)
+		return ;
+	i = 0;
+	while (i < px->cmd_count - 1)
+		free(px->pipes[i++]);
+	free(px->pipes);
+	px->pipes = NULL;
+}
 
 static int	**alloc_pipes(t_pipex *px)
 {

@@ -6,13 +6,13 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 19:41:40 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:06:43 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"pipex_bonus.h"
 
-static void	*ft_free(char **str)
+void	*ft_free(char **str)
 {
 	int	i;
 
@@ -61,7 +61,7 @@ static char	*find_command_in_paths(char *cmd, char **paths)
 	return (ft_free(paths), NULL);
 }
 
-static char	*get_command_path(char *cmd, char **env)
+char	*get_command_path(char *cmd, char **env)
 {
 	char	**paths;
 

@@ -1,16 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   childs.c                                           :+:      :+:    :+:   */
+/*   utils1_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 18:47:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 19:50:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 14:03:48 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"pipex_bonus.h"
+
+void	close_pipes(t_pipex *px)
+{
+	int	i;
+
+	i = 0;
+	while (i < px->cmd_count - 1)
+	{
+		close(px->pipes[i][0]);
+		close(px->pipes[i][1]);
+		i++;
+	}
+}
+
+void	cleanup(t_pipex *px)
+{
+	if (px->pipes)
+		free_pipes(px);
+	if (px->pids)
+	{
+		free(px->pids);
+		px->pids = NULL;
+	}
+}
 
 void	init_first_child(t_pipex *px)
 {
