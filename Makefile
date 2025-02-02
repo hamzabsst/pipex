@@ -13,7 +13,9 @@ SRCS_BONUS =	bonus/pipex_bonus.c \
 				bonus/utils_bonus.c \
 				bonus/get_cmds_bonus.c \
 				bonus/cleanup.c \
-				bonus/childs.c
+				bonus/childs.c \
+				bonus/here_doc.c \
+				bonus/heredoc_ultils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)

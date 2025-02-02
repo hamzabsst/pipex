@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:27:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 11:18:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 07:47:06 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ void	pipex(char **av, char **env)
 	create_processes(pipefd, av, env, pids);
 	(close(pipefd[0]), close(pipefd[1]));
 	(waitpid(pids[0], &status1, 0), waitpid(pids[1], &status2, 0));
-	if ((status2 & 0x7F) == 0)
-		exit((status2 >> 8) & 0xFF);
-	else if ((status1 & 0x7F) != 0)
+	if (WIFEXITED(status2))
+		exit(WEXITSTATUS(status2));
+	else if (!WIFEXITED(status1))
 		exit(EXIT_FAILURE);
 	else
-		exit((status1 >> 8) & 0xFF);
+		exit(WEXITSTATUS(status1));
 }

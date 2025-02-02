@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:08 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 18:04:54 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 09:11:36 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,6 @@ int	main(int ac, char **av, char **env)
 	}
 	if (check_syntax(ac, av) == 0)
 		handle_pipes(ac, av, env);
+	else
+		here_doc(av, env);
 }
