@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 18:46:01 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 21:23:37 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ void	handle_pipes_heredoc(char **av, char **env, char *tmp)
 	(close(pipefd[0]), close(pipefd[1]));
 	(waitpid(pids[0], &status[0], 0), waitpid(pids[1], &status[1], 0));
 	if (WIFEXITED(status[1]))
-		exit(WEXITSTATUS(status[1]));
+		(unlink(tmp), exit(WEXITSTATUS(status[1])));
 	else if (!WIFEXITED(status[0]))
-		exit(EXIT_FAILURE);
+		(unlink(tmp), exit(EXIT_FAILURE));
 	else
-		exit(WEXITSTATUS(status[0]));
+		(unlink(tmp), exit(WEXITSTATUS(status[0])));
 }
 
 static void	write_to_tmp(int fd, char *limiter)
@@ -86,13 +86,10 @@ void	here_doc(char **av, char **env)
 	char	*tmp_filename;
 
 	tmp_filename = ".here_doc_tmp";
-	if (atexit(cleanup_tmp_file) != 0)
-		(perror("atexit registration failed"), exit(EXIT_FAILURE));
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		(perror("open temporary file"), exit(EXIT_FAILURE));
 	write_to_tmp(tmp_fd, av[2]);
 	close(tmp_fd);
 	handle_pipes_heredoc(av, env, tmp_filename);
-	unlink(tmp_filename);
 }

@@ -6,16 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:08 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 18:46:12 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 21:19:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"pipex_bonus.h"
-
-void	cleanup_tmp_file(void)
-{
-	unlink(".here_doc_tmp");
-}
 
 static int	check_syntax(int ac, char **av)
 {

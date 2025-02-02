@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 18:57:37 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 21:19:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ char	*get_next(int fd);
 char	*get_command_path(char *cmd, char **env);
 void	free_pipes(t_pipex *px);
 void	execute_command_bonus_here_doc(char *cmd, char **env, t_pipex *px);
-void	cleanup_tmp_file(void);
 void	*ft_free(char **str);
 
 #endif
