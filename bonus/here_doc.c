@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 13:12:59 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/02 18:46:01 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static void	write_to_tmp(int fd, char *limiter)
 			(free(line), free(joined));
 			break ;
 		}
-		ft_putendl_fd(line, fd);
+		ft_putstr_fd(line, fd);
 		(free(line), free(joined));
 	}
 }
@@ -86,6 +86,8 @@ void	here_doc(char **av, char **env)
 	char	*tmp_filename;
 
 	tmp_filename = ".here_doc_tmp";
+	if (atexit(cleanup_tmp_file) != 0)
+		(perror("atexit registration failed"), exit(EXIT_FAILURE));
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		(perror("open temporary file"), exit(EXIT_FAILURE));
