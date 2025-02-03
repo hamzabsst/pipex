@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/01 09:48:56 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/03 09:02:41 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../inc/pipex.h"
+#include "../inc/pipex.h"
 
 void	*ft_free(char **str)
 {

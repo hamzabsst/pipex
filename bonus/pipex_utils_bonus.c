@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/01 18:47:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 14:03:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/03 09:02:19 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"pipex_bonus.h"
+#include "pipex_bonus.h"
 
 void	close_pipes(t_pipex *px)
 {

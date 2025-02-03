@@ -9,13 +9,12 @@ SRCS =	src/main.c \
 		src/pipex.c \
 		src/get_commands.c \
 
-SRCS_BONUS =	bonus/get_cmds_bonus.c \
-				bonus/here_doc.c \
-				bonus/heredoc_ultils_bonus.c \
-				bonus/pipex_bonus.c \
-				bonus/utils_bonus.c \
-				bonus/utils1_bonus.c
-
+SRCS_BONUS =	bonus/pipex_bonus.c \
+				bonus/pipex_utils_bonus.c \
+				bonus/pipes_utils_bonus.c \
+				bonus/get_cmds_bonus.c \
+				bonus/heredoc_bonus.c \
+				bonus/heredoc_utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)

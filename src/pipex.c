@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 10:27:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/02 07:47:06 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/03 09:02:45 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../inc/pipex.h"
+#include "../inc/pipex.h"
 
 static void	execute_command(char *cmd, char **env)
 {
