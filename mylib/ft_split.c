@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbousset < hbousset@student.1337.ma>       +#+  +:+       +#+        */
+/*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:08:13 by hbousset          #+#    #+#             */
-/*   Updated: 2025/01/16 18:02:13 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:46:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	count_word(char const *s, char c)
 	return (counter);
 }
 
-static void	*ft_free(char **str, int index)
+static void	*free_split(char **str, int index)
 {
 	int	i;
 
@@ -78,7 +78,7 @@ char	**ft_split(char const *s, char c)
 		size = sizeof_string(s, c, &start);
 		results[i] = malloc(sizeof(char) * size + 1);
 		if (!results[i])
-			return (ft_free(results, i));
+			return (free_split(results, i));
 		ft_strlcpy(results[i++], s + (start - size), size + 1);
 	}
 	results[i] = NULL;

@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/26 08:49:07 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/05 13:45:41 by hbousset         ###   ########.fr       */
+/*   Created: 2025/02/05 13:42:28 by hbousset          #+#    #+#             */
+/*   Updated: 2025/02/05 13:42:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "myLib.h"
 
-# include "../mylib/myLib.h"
-# include <sys/wait.h>
-# include <stdio.h>
+void	*ft_free(char **str)
+{
+	int	i;
 
-void	execute_command(char *cmd, char **env);
-
-#endif
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (str[i])
+		free (str[i++]);
+	free(str);
+	return (NULL);
+}

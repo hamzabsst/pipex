@@ -6,24 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/05 13:21:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/05 13:51:36 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
-void	*ft_free(char **str)
-{
-	int	i;
-
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (str[i])
-		free (str[i++]);
-	free(str);
-	return (NULL);
-}
 
 static char	**get_path_dir(char **env)
 {
@@ -53,8 +40,12 @@ static char	*find_command_in_paths(char *cmd, char **paths)
 		free(temp);
 		if (!full)
 			return (ft_free(paths), NULL);
-		if (access(full, X_OK) == 0)
+		if (access(full, F_OK) == 0)
+		{
+			if (access(full, X_OK) != 0)
+				(ft_free(paths), perror("pipex"), exit(126));
 			return (ft_free(paths), full);
+		}
 		free(full);
 		i++;
 	}
@@ -69,8 +60,15 @@ char	*get_command_path(char *cmd, char **env)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
+		if (access(cmd, F_OK) == 0)
+		{
+			if (access(cmd, X_OK) != 0)
+			{
+				perror("pipex");
+				exit(126);
+			}
 			return (ft_strdup(cmd));
+		}
 		return (NULL);
 	}
 	paths = get_path_dir(env);

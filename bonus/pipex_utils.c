@@ -1,71 +1,86 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1_bonus.c                                     :+:      :+:    :+:   */
+/*   pipex_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/01 18:47:25 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/03 09:02:19 by hbousset         ###   ########.fr       */
+/*   Created: 2025/01/30 14:40:12 by hbousset          #+#    #+#             */
+/*   Updated: 2025/02/05 14:01:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	close_pipes(t_pipex *px)
+void	free_pipes(t_pipex *px)
 {
 	int	i;
 
+	if (!px->pipes)
+		return ;
+	i = 0;
+	while (i < px->cmd_count - 1)
+		free(px->pipes[i++]);
+	free(px->pipes);
+	px->pipes = NULL;
+}
+
+int	**alloc_pipes(t_pipex *px)
+{
+	int	i;
+
+	px->pipes = malloc(sizeof(int *) * (px->cmd_count - 1));
+	if (!px->pipes)
+		exit(EXIT_FAILURE);
 	i = 0;
 	while (i < px->cmd_count - 1)
 	{
-		close(px->pipes[i][0]);
-		close(px->pipes[i][1]);
+		px->pipes[i] = malloc(sizeof(int) * 2);
+		if (!px->pipes[i] || pipe(px->pipes[i]) == -1)
+		{
+			if (px->pipes[i])
+				free(px->pipes[i]);
+			while (--i >= 0)
+				free(px->pipes[i]);
+			free(px->pipes);
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
 		i++;
 	}
+	return (px->pipes);
 }
 
-void	cleanup(t_pipex *px)
+void	create_child(int i, char **env, t_pipex *px)
 {
-	if (px->pipes)
-		free_pipes(px);
-	if (px->pids)
+	if (i == 0)
+		init_first_child(px);
+	else if (i == px->cmd_count - 1)
+		last_child(px);
+	else
+		mid_child(i, px);
+	close_pipes(px);
+	execute_command_bonus(px->av[i + 2], env, px);
+}
+
+int	wait_for_children(t_pipex *px)
+{
+	int	i;
+	int	status;
+	int	last_status;
+
+	i = 0;
+	while (i < px->cmd_count)
 	{
-		free(px->pids);
-		px->pids = NULL;
+		if (waitpid(px->pids[i], &status, 0) > 0 && i == px->cmd_count - 1)
+		{
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				last_status = 128 + WTERMSIG(status);
+		}
+		i++;
 	}
+	return (last_status);
 }
 
-void	init_first_child(t_pipex *px)
-{
-	int	in;
-
-	in = open(px->av[1], O_RDONLY);
-	if (in < 0)
-		(perror("pipex infile"), cleanup(px), exit(EXIT_FAILURE));
-	if (dup2(in, 0) == -1 || dup2(px->pipes[0][1], 1) == -1)
-		(perror("pipex dup2"), cleanup(px), exit(EXIT_FAILURE));
-	close(in);
-}
-
-void	mid_child(int i, t_pipex *px)
-{
-	if (dup2(px->pipes[i - 1][0], STDIN_FILENO) == -1)
-		(perror("dup2 pipe read"), cleanup(px), exit(EXIT_FAILURE));
-	if (dup2(px->pipes[i][1], STDOUT_FILENO) == -1)
-		(perror("dup2 pipe write"), cleanup(px), exit(EXIT_FAILURE));
-}
-
-void	last_child(t_pipex *px)
-{
-	int	out;
-
-	out = open(px->av[px->ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (out < 0)
-		(perror("pipex outfile"), cleanup(px), exit(EXIT_FAILURE));
-	if (dup2(px->pipes[px->cmd_count - 2][0], STDIN_FILENO) == -1)
-		(perror("pipex dup2"), cleanup(px), exit(EXIT_FAILURE));
-	if (dup2(out, STDOUT_FILENO) == -1)
-		(perror("pipex dup2"), cleanup(px), exit(EXIT_FAILURE));
-	close(out);
-}

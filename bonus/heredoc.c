@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heredoc_bonus.c                                    :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/04 08:29:18 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/05 14:03:53 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,23 +26,18 @@ static void	create_processes(t_pipex px, char *tmp)
 		(close(*(px.pipes[1])), heredoc_second_child(px));
 }
 
-static void	init_pipes(int pipefd[2], int *pp[2])
-{
-	if (pipe(pipefd) == -1)
-		(perror("pipex: pipe"), exit(EXIT_FAILURE));
-	pp[0] = &pipefd[0];
-	pp[1] = &pipefd[1];
-}
-
 void	handle_pipes_heredoc(char **av, char **env, char *tmp)
 {
-	int		pipefd[2];
 	int		status[2];
+	int		pipefd[2];
 	int		*pp[2];
 	pid_t	pids[2];
 	t_pipex	px;
 
-	init_pipes(pipefd, pp);
+	if (pipe(pipefd) == -1)
+		(perror("pipex: pipe"), exit(EXIT_FAILURE));
+	pp[0] = &pipefd[0];
+	pp[1] = &pipefd[1];
 	px.pipes = pp;
 	px.av = av;
 	px.env = env;
