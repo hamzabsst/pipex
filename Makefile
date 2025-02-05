@@ -9,17 +9,17 @@ SRCS =	src/main.c \
 		src/pipex.c \
 		src/get_commands.c \
 
-SRCS_BONUS =	bonus/pipex_bonus.c \
-				bonus/pipex_utils_bonus.c \
-				bonus/pipes_utils_bonus.c \
-				bonus/get_cmds_bonus.c \
-				bonus/heredoc_bonus.c \
-				bonus/heredoc_utils_bonus.c
+SRCS_BONUS =	bonus/pipex.c \
+				bonus/pipex_utils.c \
+				bonus/pipes_utils.c \
+				bonus/get_cmds.c \
+				bonus/heredoc.c \
+				bonus/heredoc_utils.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
-NO_RELINK = .no_relink
+NO_RELINK = /tmp/.no_relink
 
 all: $(MYLIB) $(NAME)
 

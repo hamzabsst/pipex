@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   heredoc_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/03 09:02:26 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/04 08:29:18 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	here_doc(char **av, char **env)
 	int		tmp_fd;
 	char	*tmp_filename;
 
-	tmp_filename = ".here_doc_tmp";
+	tmp_filename = "/tmp/.here_doc_tmp";
 	tmp_fd = open(tmp_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
 		(perror("open temporary file"), exit(EXIT_FAILURE));
