@@ -6,14 +6,12 @@ MYLIB_DIR = mylib
 MYLIB = $(MYLIB_DIR)/myLib.a
 
 SRCS =	src/main.c \
-		src/get_cmd.c \
+		src/get_cmd.c 
 
 SRCS_BONUS =	bonus/pipex.c \
 				bonus/pipex_utils.c \
-				bonus/pipex_utils1.c \
 				bonus/get_cmds.c \
-				bonus/heredoc.c \
-				bonus/heredoc_utils.c
+				bonus/heredoc.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)

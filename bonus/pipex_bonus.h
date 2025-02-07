@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/05 14:01:35 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/07 13:23:25 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 # include <sys/wait.h>
 # include <stdio.h>
 
+# define CLOSE_PIPES 1
+# define FULL_CLEANUP 2
+# define FREE_PIPES 3
+# define HEREDOC_CLEANUP 4
+
 typedef struct s_pipex
 {
 	int		cmd_count;
@@ -25,24 +30,18 @@ typedef struct s_pipex
 	char	**av;
 	char	**env;
 	int		ac;
+	char	**cmd_args;
+	char	*cmd_path;
+	char	**paths;
+	int		curr_cmd;
+	int		mode;
 }	t_pipex;
 
-void	execute_command_bonus(char *cmd, char **env, t_pipex *px);
-int	**alloc_pipes(t_pipex *px);
-int	wait_for_children(t_pipex *px);
-void	create_child(int i, char **env, t_pipex *px);
-void	init_first_child(t_pipex *px);
-void	mid_child(int i, t_pipex *px);
-void	last_child(t_pipex *px);
-void	free_pipes(t_pipex *px);
-void	close_pipes(t_pipex *px);
 void	cleanup(t_pipex *px);
+void	execute_command(t_pipex *px);
+void	create_processes(t_pipex *px, char *tmp);
+void	create_child(t_pipex *px);
+int		wait_for_children(t_pipex *px);
 void	here_doc(char **av, char **env);
-void	heredoc_first_child(t_pipex px, char *tmp);
-void	heredoc_second_child(t_pipex px);
-char	*get_next(int fd);
-char	*get_command_path(char *cmd, char **env);
-void	free_pipes(t_pipex *px);
-void	execute_command_bonus_here_doc(char *cmd, char **env, t_pipex *px);
 
 #endif

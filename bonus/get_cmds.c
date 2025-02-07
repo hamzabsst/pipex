@@ -6,11 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/05 13:51:36 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/07 13:44:32 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
+
+void	cleanup(t_pipex *px)
+{
+	int	i;
+
+	if (px->mode == CLOSE_PIPES || px->mode == FULL_CLEANUP)
+	{
+		i = -1;
+		while (++i < px->cmd_count - 1)
+			(close(px->pipes[i][0]), close(px->pipes[i][1]));
+	}
+	if (px->mode == FREE_PIPES || px->mode == FULL_CLEANUP)
+	{
+		if (px->pipes)
+		{
+			i = 0;
+			while (i < px->cmd_count - 1)
+				free(px->pipes[i++]);
+			(free(px->pipes), px->pipes = NULL);
+		}
+	}
+	if (px->mode == FULL_CLEANUP)
+		if (px->pids)
+			(free(px->pids), px->pids = NULL);
+	if (px->mode == HEREDOC_CLEANUP)
+		if (px->pipes)
+			(close(px->pipes[0][0]), close(px->pipes[0][1]));
+}
 
 static char	**get_path_dir(char **env)
 {
@@ -24,77 +52,79 @@ static char	**get_path_dir(char **env)
 	return (ft_split(env[i] + 5, ':'));
 }
 
-static char	*find_command_in_paths(char *cmd, char **paths)
+static char	*find_in_paths(t_pipex *px)
 {
 	char	*full;
 	char	*temp;
 	int		i;
 
-	i = 0;
-	while (paths[i])
+	i = -1;
+	while (px->paths[++i])
 	{
-		temp = ft_strjoin(paths[i], "/");
-		if (!temp)
-			return (ft_free(paths), NULL);
-		full = ft_strjoin(temp, cmd);
+		temp = ft_strjoin(px->paths[i], "/");
+		full = ft_strjoin(temp, px->cmd_args[0]);
 		free(temp);
 		if (!full)
-			return (ft_free(paths), NULL);
+			return (ft_free(px->paths), NULL);
 		if (access(full, F_OK) == 0)
 		{
 			if (access(full, X_OK) != 0)
-				(ft_free(paths), perror("pipex"), exit(126));
-			return (ft_free(paths), full);
+			{
+				(ft_free(px->paths), ft_free(px->cmd_args), cleanup(px));
+				(free(full), perror("pipex"), exit(126));
+			}
+			return (ft_free(px->paths), full);
 		}
 		free(full);
-		i++;
 	}
-	return (ft_free(paths), NULL);
+	return (ft_free(px->paths), NULL);
 }
 
-char	*get_command_path(char *cmd, char **env)
+static char	*get_cmd_path(t_pipex *px)
 {
-	char	**paths;
-
-	if (!cmd || !*cmd)
+	if (!px->cmd_args[0] || !*px->cmd_args[0])
 		return (NULL);
-	if (ft_strchr(cmd, '/'))
+	if (ft_strchr(px->cmd_args[0], '/'))
 	{
-		if (access(cmd, F_OK) == 0)
+		if (access(px->cmd_args[0], F_OK) == 0)
 		{
-			if (access(cmd, X_OK) != 0)
+			if (access(px->cmd_args[0], X_OK) != 0)
 			{
 				perror("pipex");
 				exit(126);
 			}
-			return (ft_strdup(cmd));
+			return (ft_strdup(px->cmd_args[0]));
 		}
 		return (NULL);
 	}
-	paths = get_path_dir(env);
-	if (!paths)
+	if (!px->paths)
+		px->paths = get_path_dir(px->env);
+	if (!px->paths)
 		return (NULL);
-	return (find_command_in_paths(cmd, paths));
+	return (find_in_paths(px));
 }
 
-void	execute_command_bonus(char *cmd, char **env, t_pipex *px)
+void	execute_command(t_pipex *px)
 {
-	char	**cmd_args;
-	char	*cmd_path;
-
-	cmd_args = ft_split(cmd, ' ');
-	if (!cmd_args || !cmd_args[0])
+	if (!px->av[px->curr_cmd] || !*px->av[px->curr_cmd])
 	{
-		(perror("pipex command not found"), cleanup(px));
-		(ft_free(cmd_args), exit(127));
+		ft_putstr_fd("command not found\n", 2);
+		(cleanup(px), free(px), exit(127));
 	}
-	cmd_path = get_command_path(cmd_args[0], env);
-	if (!cmd_path)
+	px->cmd_args = ft_split(px->av[px->curr_cmd], ' ');
+	if (!px->cmd_args || !px->cmd_args[0])
 	{
-		(perror("pipex command not found"), cleanup(px));
-		(ft_free(cmd_args), exit(127));
+		ft_putstr_fd("command not found", 2);
+		(cleanup(px), free(px), exit(127));
 	}
-	execve(cmd_path, cmd_args, env);
-	(perror("pipex execve"), cleanup(px));
-	(free(cmd_path), ft_free(cmd_args), exit(EXIT_FAILURE));
+	px->cmd_path = get_cmd_path(px);
+	if (!px->cmd_path)
+	{
+		ft_putstr_fd("command not found", 2);
+		(ft_free(px->cmd_args), cleanup(px), free(px), exit(127));
+	}
+	execve(px->cmd_path, px->cmd_args, px->env);
+	perror("pipex execve");
+	(free(px->cmd_path), ft_free(px->cmd_args), cleanup(px), free(px));
+	exit(1);
 }
