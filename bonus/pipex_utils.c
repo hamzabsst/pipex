@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:12 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 11:39:52 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:33:34 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	init_first_child(t_pipex *px)
 	}
 	if (dup2(in, 0) == -1 || dup2(px->pipes[0][1], 1) == -1)
 	{
-		(close(in), perror("pipex dup2"));
+		(close(in), perror("dup2"));
 		(cleanup(px), free(px), exit(1));
 	}
 	close(in);
@@ -35,9 +35,9 @@ static void	mid_child(t_pipex *px)
 {
 	px->mode = FULL_CLEANUP;
 	if (dup2(px->pipes[px->curr_cmd - 1][0], STDIN_FILENO) == -1)
-		(perror("dup2 pipe read"), cleanup(px), exit(1));
+		(perror("dup2 read"), cleanup(px), exit(1));
 	if (dup2(px->pipes[px->curr_cmd][1], STDOUT_FILENO) == -1)
-		(perror("dup2 pipe write"), cleanup(px), exit(1));
+		(perror("dup2 write"), cleanup(px), exit(1));
 }
 
 static void	last_child(t_pipex *px)
@@ -53,12 +53,12 @@ static void	last_child(t_pipex *px)
 	}
 	if (dup2(px->pipes[px->cmd_count - 2][0], STDIN_FILENO) == -1)
 	{
-		(close(out), perror("pipex dup2"));
+		(close(out), perror("dup2"));
 		(cleanup(px), free(px), exit(1));
 	}
 	if (dup2(out, STDOUT_FILENO) == -1)
 	{
-		(close(out), perror("pipex dup2"));
+		(close(out), perror("dup2"));
 		(cleanup(px), free(px), exit(1));
 	}
 	close(out);

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 13:49:14 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:32:55 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ static void	heredoc_first_child(t_pipex *px, char *tmp)
 
 	in = open(tmp, O_RDONLY);
 	if (in < 0)
-		(perror("pipex infile"), exit(EXIT_FAILURE));
+		(perror("infile"), exit(EXIT_FAILURE));
 	if (dup2(in, 0) == -1 || dup2(*(px->pipes[1]), 1) == -1)
-		(perror("pipex dup2"), exit(EXIT_FAILURE));
+		(perror("dup2"), exit(EXIT_FAILURE));
 	(close(in), close(*(px->pipes[0])), close(*(px->pipes[1])));
 	px->mode = FULL_CLEANUP;
 	px->curr_cmd = px->curr_cmd + 3;
@@ -33,9 +33,9 @@ static void	heredoc_second_child(t_pipex *px)
 
 	out = open(px->av[5], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (out < 0)
-		(perror("pipex outfile"), exit(EXIT_FAILURE));
+		(perror("outfile"), exit(EXIT_FAILURE));
 	if (dup2(*(px->pipes[0]), 0) == -1 || dup2(out, 1) == -1)
-		(perror("pipex dup2"), exit(EXIT_FAILURE));
+		(perror("dup2"), exit(EXIT_FAILURE));
 	(close(out), close(*(px->pipes[0])), close(*(px->pipes[1])));
 	px->mode = FULL_CLEANUP;
 	px->curr_cmd = px->curr_cmd + 4;
@@ -46,12 +46,12 @@ void	create_processes(t_pipex *px, char *tmp)
 {
 	px->pids[0] = fork();
 	if (px->pids[0] < 0)
-		(perror("pipex fork read end"), exit(EXIT_FAILURE));
+		(ft_putstr_fd("cannot fork read end", 2), exit(EXIT_FAILURE));
 	if (px->pids[0] == 0)
 		(close(*(px->pipes[0])), heredoc_first_child(px, tmp));
 	px->pids[1] = fork();
 	if (px->pids[1] < 0)
-		(perror("pipex fork write end"), exit(EXIT_FAILURE));
+		(ft_putstr_fd("cannot fork write end", 2), exit(EXIT_FAILURE));
 	if (px->pids[1] == 0)
 		(close(*(px->pipes[1])), heredoc_second_child(px));
 }
@@ -65,7 +65,7 @@ static void	init_heredoc(char **av, char **env, char *tmp)
 	t_pipex	px;
 
 	if (pipe(pipefd) == -1)
-		(perror("pipex: pipe"), exit(EXIT_FAILURE));
+		(ft_putstr_fd("cannot create a pipe", 2), exit(EXIT_FAILURE));
 	pp[0] = &pipefd[0];
 	pp[1] = &pipefd[1];
 	px.pipes = pp;
@@ -94,7 +94,7 @@ void	here_doc(char **av, char **env)
 	unlink("/tmp/.here_doc_tmp");
 	tmp_fd = open("/tmp/.here_doc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (tmp_fd < 0)
-		(perror("open temporary file"), exit(EXIT_FAILURE));
+		(ft_putstr_fd("cannot open tmp file", 2), exit(EXIT_FAILURE));
 	joined = ft_strjoin(av[2], "\n");
 	if (!joined)
 		(close(tmp_fd), unlink("/tmp/.here_doc_tmp"), exit(EXIT_FAILURE));
