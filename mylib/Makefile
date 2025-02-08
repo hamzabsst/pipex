@@ -5,22 +5,27 @@ NAME = myLib.a
 
 FILES = $(wildcard *.c)
 
-SRCS =	$(FILES)
+SRCS = $(FILES)
 
 OBJS = ${SRCS:.c=.o}
 
 all: ${NAME}
 
 ${NAME}: ${OBJS}
-		ar rc ${NAME} ${OBJS}
+		@echo "Creating archive: ${NAME}"
+		@ar rc ${NAME} ${OBJS}
+		@echo "Compilation finished successfully!"
 
 %.o: %.c libft.h
-		${CC} ${CFLAGS} -c $< -o $@
+		@echo "Compiling $<"
+		@${CC} ${CFLAGS} -c $< -o $@
 
 clean:
+		@echo "Cleaning mylib object files"
 		@rm -f ${OBJS}
 
 fclean: clean
+		@echo "Removing ${NAME}"
 		@rm -f ${NAME}
 
 re: fclean all

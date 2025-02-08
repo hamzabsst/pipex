@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 10:19:09 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:16:04 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@ typedef struct s_pipex
 
 void	cleanup(t_pipex *px);
 void	execute_command(t_pipex *px);
+void	here_doc(char **av, char **env);
 void	create_processes(t_pipex *px, char *tmp);
 void	create_child(t_pipex *px);
 int		wait_for_children(t_pipex *px);
-void	here_doc(char **av, char **env);
-int		count_tokens(const char *s, char c);
-int		token_length(const char *s, char c, int start);
-void	copy_token(const char *s, char c, int *start, char *token);
+char	**ft_split_quote(const char *s, char c);
 void	*free_split(char **str, int index);
 
 #endif

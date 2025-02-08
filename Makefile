@@ -1,36 +1,40 @@
-NAME = pipex
-CC = cc
-CFLAGS = -Wall -Werror -Wextra
+NAME	= pipex
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror
 
-MYLIB_DIR = mylib
-MYLIB = $(MYLIB_DIR)/myLib.a
+MYLIB_DIR	= mylib
+MYLIB		= $(MYLIB_DIR)/myLib.a
 
-SRCS =	src/pipex.c \
-		src/childs.c \
-		src/get_cmds.c \
-		src/heredoc.c \
-		src/ft_split_quote.c \
+SRCS	=	src/pipex.c \
+			src/childs.c \
+			src/get_cmds.c \
+			src/heredoc.c \
+			src/ft_split_quote.c
 
-OBJS = $(SRCS:.c=.o)
+OBJS	= $(SRCS:.c=.o)
 
 all: $(MYLIB) $(NAME)
+	@echo "Build complete!"
 
 $(MYLIB):
-		@$(MAKE) -C $(MYLIB_DIR)
+	@echo "Building myLib"
+	@$(MAKE) -s -C $(MYLIB_DIR)
 
 %.o: %.c inc/pipex.h
-		@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(MYLIB)
-		@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME)
 
 clean:
-		@rm -f $(OBJS)
-		@$(MAKE) clean -C $(MYLIB_DIR)
+	@echo "Cleaning pipex object files"
+	@rm -f $(OBJS)
+	@$(MAKE) -s clean -C $(MYLIB_DIR)
 
 fclean: clean
-		@rm -f $(NAME)
-		@$(MAKE) fclean -C $(MYLIB_DIR)
+	@echo "Removing ./pipex"
+	@rm -f $(NAME)
+	@$(MAKE) -s fclean -C $(MYLIB_DIR)
 
 re: fclean all
 

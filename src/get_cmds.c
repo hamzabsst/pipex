@@ -6,39 +6,24 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 11:10:49 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:18:45 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
 
-static char	**ft_split_quote(const char *s, char c)
+void	*free_split(char **str, int index)
 {
-	char	**results;
-	int		tokens;
-	int		i;
-	int		start;
-	int		len;
+	int	i;
 
-	if (!s)
-		return (NULL);
-	start = 0;
 	i = 0;
-	tokens = count_tokens(s, c);
-	results = malloc(sizeof(char *) * (tokens + 1));
-	if (!results)
-		return (NULL);
-	while (i < tokens)
+	while (i < index)
 	{
-		len = token_length(s, c, start);
-		results[i] = malloc(sizeof(char) * (len + 1));
-		if (!results[i])
-			return (free_split(results, i));
-		copy_token(s, c, &start, results[i]);
+		free(str[i]);
 		i++;
 	}
-	results[i] = NULL;
-	return (results);
+	free(str);
+	return (NULL);
 }
 
 static char	**get_path_dir(char **env)

@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 09:43:31 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 10:16:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:15:26 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	skip_quote(const char *s, char quote, int *pos, int *len)
 		(*pos)++;
 }
 
-int	count_tokens(const char *s, char c)
+static int	count_tokens(const char *s, char c)
 {
 	int (count), (i);
 	i = 0;
@@ -50,7 +50,7 @@ int	count_tokens(const char *s, char c)
 	return (count);
 }
 
-int	token_length(const char *s, char c, int start)
+static int	token_length(const char *s, char c, int start)
 {
 	int		len;
 	int		pos;
@@ -76,7 +76,7 @@ int	token_length(const char *s, char c, int start)
 	return (len);
 }
 
-void	copy_token(const char *s, char c, int *start, char *token)
+static void	copy_token(const char *s, char c, int *start, char *token)
 {
 	int		i;
 	char	quote;
@@ -100,16 +100,31 @@ void	copy_token(const char *s, char c, int *start, char *token)
 	token[i] = '\0';
 }
 
-void	*free_split(char **str, int index)
+char	**ft_split_quote(const char *s, char c)
 {
-	int	i;
+	char	**results;
+	int		tokens;
+	int		i;
+	int		start;
+	int		len;
 
+	if (!s)
+		return (NULL);
+	start = 0;
 	i = 0;
-	while (i < index)
+	tokens = count_tokens(s, c);
+	results = malloc(sizeof(char *) * (tokens + 1));
+	if (!results)
+		return (NULL);
+	while (i < tokens)
 	{
-		free(str[i]);
+		len = token_length(s, c, start);
+		results[i] = malloc(sizeof(char) * (len + 1));
+		if (!results[i])
+			return (free_split(results, i));
+		copy_token(s, c, &start, results[i]);
 		i++;
 	}
-	free(str);
-	return (NULL);
+	results[i] = NULL;
+	return (results);
 }
