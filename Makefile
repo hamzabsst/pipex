@@ -5,38 +5,27 @@ CFLAGS = -Wall -Werror -Wextra
 MYLIB_DIR = mylib
 MYLIB = $(MYLIB_DIR)/myLib.a
 
-SRCS =	src/main.c \
-		src/get_cmd.c 
-
-SRCS_BONUS =	bonus/pipex.c \
-				bonus/pipex_utils.c \
-				bonus/get_cmds.c \
-				bonus/heredoc.c
+SRCS =	src/pipex.c \
+		src/childs.c \
+		src/get_cmds.c \
+		src/heredoc.c \
+		src/ft_split_quote.c \
 
 OBJS = $(SRCS:.c=.o)
-OBJS_BONUS = $(SRCS_BONUS:.c=.o)
-
-NO_RELINK = /tmp/.no_relink
 
 all: $(MYLIB) $(NAME)
 
 $(MYLIB):
 		@$(MAKE) -C $(MYLIB_DIR)
 
-%.o: %.c
+%.o: %.c inc/pipex.h
 		@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(MYLIB)
 		@$(CC) $(CFLAGS) $(OBJS) $(MYLIB) -o $(NAME)
 
-bonus: ${NO_RELINK}
-
-${NO_RELINK}: $(OBJS_BONUS) $(MYLIB)
-			@$(CC) $(CFLAGS) $(OBJS_BONUS) $(MYLIB) -o $(NAME)
-			@touch ${NO_RELINK}
-
 clean:
-		@rm -f $(OBJS) $(OBJS_BONUS) $(NO_RELINK)
+		@rm -f $(OBJS)
 		@$(MAKE) clean -C $(MYLIB_DIR)
 
 fclean: clean
@@ -45,4 +34,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

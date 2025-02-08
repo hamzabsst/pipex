@@ -6,11 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:40:08 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 15:02:41 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 10:15:51 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../inc/pipex.h"
+
+void	cleanup(t_pipex *px)
+{
+	int	i;
+
+	if (px->mode == CLOSE_PIPES || px->mode == FULL_CLEANUP)
+	{
+		i = -1;
+		while (++i < px->cmd_count - 1)
+			(close(px->pipes[i][0]), close(px->pipes[i][1]));
+	}
+	if (px->mode == FREE_PIPES || px->mode == FULL_CLEANUP)
+	{
+		if (px->pipes)
+		{
+			i = 0;
+			while (i < px->cmd_count - 1)
+				free(px->pipes[i++]);
+			(free(px->pipes), px->pipes = NULL);
+		}
+	}
+	if (px->mode == FULL_CLEANUP)
+		if (px->pids)
+			(free(px->pids), px->pids = NULL);
+	if (px->mode == HEREDOC_CLEANUP)
+		if (px->pipes)
+			(close(px->pipes[0][0]), close(px->pipes[0][1]));
+}
 
 static int	**alloc_pipes(t_pipex *px)
 {

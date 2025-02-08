@@ -6,38 +6,39 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 15:02:03 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 10:16:00 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../inc/pipex.h"
 
-void	cleanup(t_pipex *px)
+static char	**ft_split_quote(const char *s, char c)
 {
-	int	i;
+	char	**results;
+	int		tokens;
+	int		i;
+	int		start;
+	int		len;
 
-	if (px->mode == CLOSE_PIPES || px->mode == FULL_CLEANUP)
+	if (!s)
+		return (NULL);
+	start = 0;
+	i = 0;
+	tokens = count_tokens(s, c);
+	results = malloc(sizeof(char *) * (tokens + 1));
+	if (!results)
+		return (NULL);
+	while (i < tokens)
 	{
-		i = -1;
-		while (++i < px->cmd_count - 1)
-			(close(px->pipes[i][0]), close(px->pipes[i][1]));
+		len = token_length(s, c, start);
+		results[i] = malloc(sizeof(char) * (len + 1));
+		if (!results[i])
+			return (free_split(results, i));
+		copy_token(s, c, &start, results[i]);
+		i++;
 	}
-	if (px->mode == FREE_PIPES || px->mode == FULL_CLEANUP)
-	{
-		if (px->pipes)
-		{
-			i = 0;
-			while (i < px->cmd_count - 1)
-				free(px->pipes[i++]);
-			(free(px->pipes), px->pipes = NULL);
-		}
-	}
-	if (px->mode == FULL_CLEANUP)
-		if (px->pids)
-			(free(px->pids), px->pids = NULL);
-	if (px->mode == HEREDOC_CLEANUP)
-		if (px->pipes)
-			(close(px->pipes[0][0]), close(px->pipes[0][1]));
+	results[i] = NULL;
+	return (results);
 }
 
 static char	**get_path_dir(char **env)
@@ -71,8 +72,8 @@ static char	*find_in_paths(t_pipex *px)
 			if (access(full, X_OK) != 0)
 			{
 				perror(px->cmd_args[0]);
-				(ft_free(px->paths), ft_free(px->cmd_args), cleanup(px));
-				(free(full), exit(126));
+				(ft_free(px->paths), ft_free(px->cmd_args), free(full));
+				(cleanup(px), free(px), exit(126));
 			}
 			return (ft_free(px->paths), full);
 		}
@@ -91,8 +92,9 @@ static char	*get_cmd_path(t_pipex *px)
 		{
 			if (access(px->cmd_args[0], X_OK) != 0)
 			{
-				perror("pipex");
-				exit(126);
+				perror(px->cmd_args[0]);
+				(ft_free(px->paths), ft_free(px->cmd_args), cleanup(px));
+				(free(px), exit(126));
 			}
 			return (ft_strdup(px->cmd_args[0]));
 		}
@@ -113,7 +115,7 @@ void	execute_command(t_pipex *px)
 		ft_putstr_fd(":command not found", 2);
 		(cleanup(px), free(px), exit(127));
 	}
-	px->cmd_args = ft_split(px->av[px->curr_cmd], ' ');
+	px->cmd_args = ft_split_quote(px->av[px->curr_cmd], ' ');
 	if (!px->cmd_args || !px->cmd_args[0])
 	{
 		ft_putstr_fd(px->cmd_args[0], 2);
@@ -124,7 +126,7 @@ void	execute_command(t_pipex *px)
 	if (!px->cmd_path)
 	{
 		ft_putstr_fd(px->cmd_args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd(":command not found", 2);
 		(ft_free(px->cmd_args), cleanup(px), free(px), exit(127));
 	}
 	execve(px->cmd_path, px->cmd_args, px->env);

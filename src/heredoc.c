@@ -6,11 +6,11 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/07 14:32:55 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 10:15:57 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex_bonus.h"
+#include "../inc/pipex.h"
 
 static void	heredoc_first_child(t_pipex *px, char *tmp)
 {
