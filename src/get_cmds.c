@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 11:42:10 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 10:16:00 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:10:49 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,25 +112,26 @@ void	execute_command(t_pipex *px)
 	if (!px->av[px->curr_cmd] || !*px->av[px->curr_cmd])
 	{
 		ft_putstr_fd(px->av[px->curr_cmd], 2);
-		ft_putstr_fd(":command not found", 2);
-		(cleanup(px), free(px), exit(127));
+		ft_putstr_fd(":command not found\n", 2);
+		(cleanup(px), free(px), exit(0));
 	}
 	px->cmd_args = ft_split_quote(px->av[px->curr_cmd], ' ');
 	if (!px->cmd_args || !px->cmd_args[0])
 	{
 		ft_putstr_fd(px->cmd_args[0], 2);
-		ft_putstr_fd(":command not found", 2);
+		ft_putstr_fd(":command not found\n", 2);
+		if (px->cmd_args)
+			ft_free(px->cmd_args);
 		(cleanup(px), free(px), exit(127));
 	}
 	px->cmd_path = get_cmd_path(px);
 	if (!px->cmd_path)
 	{
 		ft_putstr_fd(px->cmd_args[0], 2);
-		ft_putstr_fd(":command not found", 2);
+		ft_putstr_fd(":command not found\n", 2);
 		(ft_free(px->cmd_args), cleanup(px), free(px), exit(127));
 	}
 	execve(px->cmd_path, px->cmd_args, px->env);
-	perror("pipex execve");
-	(free(px->cmd_path), ft_free(px->cmd_args), cleanup(px), free(px));
-	exit(1);
+	(perror("pipex execve"), free(px->cmd_path));
+	(ft_free(px->cmd_args), cleanup(px), free(px), exit(1));
 }
