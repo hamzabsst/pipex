@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:08:13 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/05 13:46:44 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:50:07 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,6 @@ static int	count_word(char const *s, char c)
 		i++;
 	}
 	return (counter);
-}
-
-static void	*free_split(char **str, int index)
-{
-	int	i;
-
-	i = 0;
-	while (i < index)
-	{
-		free (str[i]);
-		i++;
-	}
-	free(str);
-	return (NULL);
 }
 
 static int	sizeof_string(const char *str, char c, int *start)

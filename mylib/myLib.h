@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 15:54:37 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 10:19:48 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:49:56 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,5 @@ long	ft_atol(const char	*str);
 char	*ft_strcpy(char *s1, char *s2);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_free(char **str);
+void	*free_split(char **str, int index);
 #endif

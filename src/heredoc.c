@@ -6,7 +6,7 @@
 /*   By: hbousset <hbousset@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 08:40:55 by hbousset          #+#    #+#             */
-/*   Updated: 2025/02/08 11:13:58 by hbousset         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:53:44 by hbousset         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	heredoc_first_child(t_pipex *px, char *tmp)
 	if (dup2(in, 0) == -1 || dup2(*(px->pipes[1]), 1) == -1)
 		(perror("dup2"), exit(EXIT_FAILURE));
 	(close(in), close(*(px->pipes[0])), close(*(px->pipes[1])));
-	px->mode = FULL_CLEANUP;
+	px->mode = HEREDOC_CLEANUP;
 	px->curr_cmd = px->curr_cmd + 3;
 	execute_command(px);
 }
@@ -37,7 +37,7 @@ static void	heredoc_second_child(t_pipex *px)
 	if (dup2(*(px->pipes[0]), 0) == -1 || dup2(out, 1) == -1)
 		(perror("dup2"), exit(EXIT_FAILURE));
 	(close(out), close(*(px->pipes[0])), close(*(px->pipes[1])));
-	px->mode = FULL_CLEANUP;
+	px->mode = HEREDOC_CLEANUP;
 	px->curr_cmd = px->curr_cmd + 4;
 	execute_command(px);
 }
